@@ -48,12 +48,6 @@ function handleCliClient(ws) {
     }));
   }, HEARTBEAT_INTERVAL);
   console.log(user, 'connected', ws.upgradeReq.headers);
-  /*
-  ws.send(JSON.stringify({
-    version: VERSION,
-    hostname: 'google.com',
-    postURL: ORIGIN + '/trace/google.com'
-  }));*/
   ws.on('close', function() {
     delete cliClients[user];
     console.log(user, 'disconnected');
