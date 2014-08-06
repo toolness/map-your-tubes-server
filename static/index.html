@@ -1,15 +1,12 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <title>Map Your Tubes</title>
-<p>hi.</p>
-<form method="post" action="/trace">
+<form method="post" action="/trace" id="trace">
   Trace path to domain: <input type="text" name="domain" required>
   <button type="submit">Submit</button>
 </form>
 <script src="jquery.js"></script>
 <script>
-var currSessionId = 0;
-
 // http://stackoverflow.com/a/10418013
 function relativeWebSocket(path) {
   var loc = window.location, new_uri;
@@ -22,32 +19,44 @@ function relativeWebSocket(path) {
   return new WebSocket(new_uri + path);
 }
 
+function formAsJSON(form) {
+  // Would love to just use FormData instead but it insists on sending
+  // the data as multipart, which we don't want to deal with on the
+  // server-side.
+  var payload = {};
+  for (var i = 0; i < form.length; i++) {
+    var control = form[i];
+    if (control.name) payload[control.name] = control.value;
+  }
+  return payload;
+}
+
 var conn = relativeWebSocket('/');
-conn.onopen = function() {
-  console.log("OPEN YO");
-  conn.send("SUP");
-};
-conn.onclose = function() {
-  console.log("CLOSE YO");
-};
-conn.onerror = function() {
-  console.log("ERROR YO");
-};
 conn.onmessage = function(e) {
   var data = JSON.parse(e.data);
-  if (data.id > currSessionId) {
-    $('.session-' + currSessionId).remove();
-    currSessionId = data.id;
+  if (data.type == 'notification') {
+    $('.notification, .log').remove();
+    $('<div class="notification"></div>').text(data.text)
+      .appendTo('body').hide().slideDown();
+  } else {
+    var logSelect = '.log.user-' + data.user;
+    if (!$(logSelect).length) {
+      $('<pre class="log user-' + data.user + '"></pre>')
+        .text('traceroute to ' + data.domain + ' for ' + data.user + '\n')
+        .appendTo(document.body);
+    }
+    $(logSelect).append(document.createTextNode(data.content + '\n'));
   }
-  if (!$('.user-' + data.user).length) {
-    $('<pre class="user-' + data.user + '"></pre>')
-      .text('traceroute to ' + data.domain + ' for ' + data.user + '\n')
-      .appendTo(document.body);
-  }
-  var log = $('.user-' + data.user);
-
-  log.append(document.createTextNode(data.content + '\n'));
-
-  console.log("MESSAGE YO", e.data);
 };
+
+$("#trace").submit(function(e) {
+  e.preventDefault();
+
+  var payload = formAsJSON(this);
+  var req = new XMLHttpRequest();
+  req.open("POST", this.action);
+  req.setRequestHeader("Content-Type", "application/json");
+  req.send(JSON.stringify(payload));
+  this.reset();
+});
 </script>

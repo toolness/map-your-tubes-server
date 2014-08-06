@@ -56,9 +56,7 @@ function handleCliClient(ws) {
 }
 
 app.use(express.static(__dirname + '/static'));
-app.post('/trace', bodyParser.urlencoded({
-  extended: false
-}), function(req, res, next) {
+app.post('/trace', bodyParser.json(), function(req, res, next) {
   console.log('trace request received');
   currSession.id = Date.now();
   currSession.domain = req.body.domain;
@@ -70,7 +68,13 @@ app.post('/trace', bodyParser.urlencoded({
       postURL: ORIGIN + '/trace/' + user + '/' + currSession.id
     }));
   });
-  return res.redirect('/');
+  browserClients.forEach(function(ws) {
+    ws.send(JSON.stringify({
+      type: 'notification',
+      text: 'Traceroute request for ' + currSession.domain + ' started.'
+    }));
+  });
+  return res.send('trace started');
 });
 app.post('/trace/:user/:id', function(req, res, next) {
   var id = parseInt(req.param('id'));
