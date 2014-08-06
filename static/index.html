@@ -68,3 +68,18 @@ $("#trace").submit(function(e) {
   this.reset();
 });
 </script>
+<script>
+TogetherJSConfig_siteName = 'Map Your Tubes';
+TogetherJSConfig_findRoom = 'index';
+TogetherJSConfig_suppressJoinConfirmation = true;
+TogetherJSConfig_autoStart = true;
+TogetherJSConfig_dontShowClicks = true;
+
+try {
+  // This is an undocumented hack, but we basically want to suppress
+  // the intro dialog here, to avoid confusing users who just want to
+  // use the page.
+  localStorage['togetherjs.settings.seenIntroDialog'] = 'true';
+} catch (e) {}
+</script>
+<script src="//togetherjs.com/togetherjs-min.js"></script>
