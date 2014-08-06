@@ -1,0 +1,23 @@
+{
+  "name": "map-your-tubes-server",
+  "version": "0.0.1",
+  "description": "Server for map-your-tubes CLI client.",
+  "main": "app.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "body-parser": "~1.6.0",
+    "express": "~4.8.0",
+    "ws": "~0.4.32",
+    "split": "~0.3.0"
+  },
+  "devDependencies": {
+    "mocha": "~1.21.3"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "author": "Atul Varma",
+  "license": "ISC"
+}
