@@ -65,7 +65,6 @@ $("#trace").submit(function(e) {
   req.open("POST", this.action);
   req.setRequestHeader("Content-Type", "application/json");
   req.send(JSON.stringify(payload));
-  this.reset();
 });
 </script>
 <script>
