@@ -62,7 +62,9 @@ function handleCliClient(ws) {
 }
 
 app.use(express.static(__dirname + '/static'));
-app.post('/trace', bodyParser.urlencoded(), function(req, res, next) {
+app.post('/trace', bodyParser.urlencoded({
+  extended: false
+}), function(req, res, next) {
   console.log('trace request received');
   currSession.id = Date.now();
   currSession.domain = req.body.domain;
