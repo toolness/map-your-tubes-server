@@ -45,6 +45,14 @@ describe('parse-traceroute', function() {
       });
     });
 
+    it('reports hostnames in hops', function() {
+      parse('linux', ' 9  example.org (72.21.220.112)  8.378 ms * *').should.eql({
+        hop: 9,
+        hostname: 'example.org',
+        ip: '72.21.220.112'
+      });
+    });
+
     it('reports unsuccessful hops', function() {
       parse('darwin', '30  * * *').should.eql({
         hop: 30
