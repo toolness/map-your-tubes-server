@@ -150,5 +150,8 @@ try {
   // use the page.
   localStorage['togetherjs.settings.seenIntroDialog'] = 'true';
 } catch (e) {}
+
+if (!/DISABLE_TOGETHERJS=1/.test(window.location.search))
+  document.write('<script src="//togetherjs.com/togetherjs-min.js"></' +
+                 'script>');
 </script>
-<script src="//togetherjs.com/togetherjs-min.js"></script>
