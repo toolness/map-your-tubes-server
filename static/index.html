@@ -27,6 +27,7 @@
 <script src="md5.js"></script>
 <script>
 var userColors = {};
+var mapMarkers = [];
 var mapLines = {};
 var map = L.mapbox
   .map('map')
@@ -66,6 +67,17 @@ function formAsJSON(form) {
   return payload;
 }
 
+function clearMap() {
+  mapMarkers.forEach(function(marker) {
+    map.removeLayer(marker);
+  });
+  mapMarkers.splice(0, mapMarkers.length);
+  Object.keys(mapLines).forEach(function(key) {
+    map.removeLayer(mapLines[key]);
+    delete mapLines[key];
+  });
+}
+
 function addToMap(data) {
   var lineId = data.id + '.' + data.user;
 
@@ -76,7 +88,7 @@ function addToMap(data) {
 
   mapLines[lineId].addLatLng(L.latLng.apply(L, data.geo.ll));
 
-  L.mapbox.featureLayer({
+  mapMarkers.push(L.mapbox.featureLayer({
     type: 'Feature',
     geometry: {
       type: 'Point',
@@ -90,13 +102,14 @@ function addToMap(data) {
       'marker-size': 'small',
       'marker-color': colorForUser(data.user)
     }
-  }).addTo(map);
+  }).addTo(map));
 }
 
 var conn = relativeWebSocket('/');
 conn.onmessage = function(e) {
   var data = JSON.parse(e.data);
   if (data.type == 'notification') {
+    clearMap();
     $('.notification, .log').remove();
     $('<div class="notification"></div>').text(data.text)
       .appendTo('body').hide().slideDown();
