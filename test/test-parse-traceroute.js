@@ -31,21 +31,21 @@ describe('parse-traceroute', function() {
   });
 
   describe('when given non-win32 output', function() {
-    it.skip('reports successful hops', function() {
+    it('reports successful hops', function() {
       parse('linux', ' 1  104.131.223.253 (104.131.223.253)  5.123 ms  5.082 ms 104.131.223.254 (104.131.223.254)  0.201 ms').should.eql({
         hop: 1,
         ip: '104.131.223.253'
       });
     });
 
-    it.skip('reports semi-successful hops', function() {
+    it('reports semi-successful hops', function() {
       parse('linux', ' 9  * 72.21.220.112 (72.21.220.112)  8.378 ms *').should.eql({
         hop: 9,
         ip: '72.21.220.112'
       });
     });
 
-    it.skip('reports unsuccessful hops', function() {
+    it('reports unsuccessful hops', function() {
       parse('darwin', '30  * * *').should.eql({
         hop: 30
       });
