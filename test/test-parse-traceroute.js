@@ -4,7 +4,7 @@ var parse = require('../lib/parse-traceroute');
 
 describe('parse-traceroute', function() {
   describe('when given win32 output', function() {
-    it.skip('reports successful hops with hostnames', function() {
+    it('reports successful hops with hostnames', function() {
       parse('win32', '  6    10 ms     9 ms     7 ms  0.ae2.BR3.NYC4.ALTER.NET [140.222.229.99] ').should.eql({
         hop: 6,
         hostname: '0.ae2.BR3.NYC4.ALTER.NET',
@@ -12,14 +12,14 @@ describe('parse-traceroute', function() {
       });
     });
 
-    it.skip('reports successful hops without hostnames', function() {
+    it('reports successful hops without hostnames', function() {
       parse('win32', '  7     8 ms     8 ms    11 ms  204.255.169.234 ').should.eql({
         hop: 7,
         ip: '204.255.169.234'
       });
     });
 
-    it.skip('reports unsuccessful hops', function() {
+    it('reports unsuccessful hops', function() {
       parse('win32', ' 16     *        *        *     Request timed out.').should.eql({
         hop: 16
       });
