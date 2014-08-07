@@ -123,7 +123,7 @@ conn.onmessage = function(e) {
         .appendTo(document.body);
     }
     $(logSelect).append(document.createTextNode(data.content + '\n'));
-    if (data.geo && data.geo.ll) addToMap(data);
+    if (data.geo && data.geo.city && data.geo.ll) addToMap(data);
   }
 };
 
