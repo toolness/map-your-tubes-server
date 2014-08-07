@@ -3,6 +3,9 @@ var WebSocketServer = require('ws').Server;
 var express = require('express');
 var bodyParser = require('body-parser');
 var split = require('split');
+var geoip = require('geoip-lite');
+
+var parseTraceroute = require('./lib/parse-traceroute');
 
 var CLI_URL_RE = /^\/user\/([A-Za-z0-9_\-]+)$/;
 var PORT = process.env.PORT || 3000;
@@ -79,15 +82,19 @@ app.post('/trace', bodyParser.json(), function(req, res, next) {
 app.post('/trace/:user/:id', function(req, res, next) {
   var id = parseInt(req.param('id'));
   var user = req.param('user');
+  var platform = req.headers['x-node-platform'];
   console.log(req.headers);
   req.pipe(split()).on('data', function(line) {
     if (id != currSession.id) return;
+    var parsed = parseTraceroute(platform, line);
     browserClients.forEach(function(ws) {
       ws.send(JSON.stringify({
         user: user,
         id: id,
         domain: currSession.domain,
-        content: line
+        content: line,
+        parsed: parsed || null,
+        geo: parsed && parsed.ip ? geoip.lookup(parsed.ip) : null
       }));
     });
     console.log("LINE", line);
