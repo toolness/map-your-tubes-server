@@ -97,8 +97,10 @@ function addToMap(data) {
     properties: {
       title: 'Hop ' + data.parsed.hop + ' to ' + data.domain + ' for ' +
              data.user,
-      description: (data.parsed.hostname || data.parsed.ip) +
-                   (data.geo.city ? ', ' + data.geo.city : ''),
+      description: (data.parsed.hostname || data.parsed.ip) + ', ' +
+                   (data.geo.city || '') + ' ' +
+                   (data.geo.region || '') + ' ' +
+                   (data.geo.country || ''),
       'marker-size': 'small',
       'marker-color': colorForUser(data.user)
     }
