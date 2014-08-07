@@ -70,7 +70,9 @@ function addToMap(data) {
   var lineId = data.id + '.' + data.user;
 
   if (!(lineId in mapLines))
-    mapLines[lineId] = L.polyline([]).addTo(map);
+    mapLines[lineId] = L.polyline([], {
+      color: colorForUser(data.user)
+    }).addTo(map);
 
   mapLines[lineId].addLatLng(L.latLng.apply(L, data.geo.ll));
 
